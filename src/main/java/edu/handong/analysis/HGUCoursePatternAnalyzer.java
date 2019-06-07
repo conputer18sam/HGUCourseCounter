@@ -1,8 +1,11 @@
 package edu.handong.analysis;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 import edu.handong.analysis.datamodel.Course;
@@ -38,7 +41,6 @@ public class HGUCoursePatternAnalyzer {
 		
 		// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
 		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		
 		// Generate result lines to be saved.
 		ArrayList<String> linesToBeSaved = countNumberOfCoursesTakenInEachSemester(sortedStudents);
 		
@@ -55,8 +57,26 @@ public class HGUCoursePatternAnalyzer {
 	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
 		
 		// TODO: Implement this method
-		
-		return null; // do not forget to return a proper variable.
+		HashMap<String,Student> hashMap = new HashMap<String,Student>();
+
+		for(String line:lines){
+			
+			Course course = new Course(line);
+			String key = course.getStudentId();
+
+			Student student = new Student(key);
+			
+			if(hashMap.containsKey(key)) {
+				hashMap.get(student.getStudentId()).addCourse(course);
+			}
+			else {
+				student.addCourse(course);
+				hashMap.put(key,student);
+			}
+		}
+
+		// do not forget to return a proper variable.		
+		return hashMap;
 	}
 
 	/**
@@ -75,7 +95,17 @@ public class HGUCoursePatternAnalyzer {
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
 		
 		// TODO: Implement this method
-		
-		return null; // do not forget to return a proper variable.
+		ArrayList<String> arrayList = new ArrayList<String>();
+
+		for(String key : sortedStudents.keySet()){
+			Student student = sortedStudents.get(key);
+			// 전체 등록학기 수를 알아야해
+			int Semester = student.getSemestersByYearAndSemester().size();
+			for(int i =0; i<Semester; i++) {
+				int NumCoursesTakenInTheSemester = student.getNumCourseInNthSementer(i);
+				arrayList.add(key+","+Semester+","+i+","+NumCoursesTakenInTheSemester);
+			}
+		}
+		return arrayList; // do not forget to return a proper variable.
 	}
 }
