@@ -1,6 +1,5 @@
 package edu.handong.analysise.utils;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
